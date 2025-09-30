@@ -2,61 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ADI - Display Orders</title>
+  <title>ADI - Current Order</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #0f0;
+      background-color: #fff3cd;
       text-align: center;
-      padding-top: 100px;
+      padding-top: 50px;
     }
-    h1 {
-      font-size: 80px;
+    h2 { color: #856404; }
+    #orderNumber {
+      font-size: 48px;
       font-weight: bold;
+      color: green;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <h1 id="currentOrder">--</h1>
+<h2>Now Serving</h2>
+<div id="orderNumber">---</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDOoOCdWjdQ5eEdjqUlXvOMBRr6tNAujzI",
-      authDomain: "first-proj-26e93.firebaseapp.com",
-      databaseURL: "https://first-proj-26e93-default-rtdb.firebaseio.com",
-      projectId: "first-proj-26e93",
-      storageBucket: "first-proj-26e93.firebasestorage.app",
-      messagingSenderId: "939884755349",
-      appId: "1:939884755349:web:81f4666a00d0f5952a9e9c",
-      measurementId: "G-D20036Q3KQ"
-    };
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDOoOCdWjdQ5eEdjqUlXvOMBRr6tNAujzI",
+    authDomain: "first-proj-26e93.firebaseapp.com",
+    databaseURL: "https://first-proj-26e93-default-rtdb.firebaseio.com",
+    projectId: "first-proj-26e93",
+    storageBucket: "first-proj-26e93.firebasestorage.app",
+    messagingSenderId: "939884755349",
+    appId: "1:939884755349:web:81f4666a00d0f5952a9e9c",
+    measurementId: "G-D20036Q3KQ"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-    const orderDisplay = document.getElementById("currentOrder");
+  const orderDiv = document.getElementById("orderNumber");
 
-    // Listen to the "latest" order node
-    const latestOrderRef = ref(db, "latestOrder");
-    onValue(latestOrderRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const orderId = snapshot.val();
-        orderDisplay.innerText = orderId;
+  const orderRef = ref(db, "currentOrder");
+  onValue(orderRef, (snapshot) => {
+    if (snapshot.exists()) {
+      const orderId = snapshot.val();
+      orderDiv.textContent = orderId;
 
-        // Read the number out loud
-        const msg = new SpeechSynthesisUtterance("Order number " + orderId + " is ready");
-        window.speechSynthesis.speak(msg);
-      } else {
-        orderDisplay.innerText = "--";
-      }
-    });
-  </script>
+      // قراءة الرقم بالصوت
+      const utterance = new SpeechSynthesisUtterance("Order number " + orderId + " is ready");
+      speechSynthesis.speak(utterance);
+    }
+  });
+</script>
 
 </body>
 </html>
