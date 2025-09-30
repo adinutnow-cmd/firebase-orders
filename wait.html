@@ -2,86 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ADI - Current Order</title>
+  <title>ADI - Login</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fff3cd;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
-      padding-top: 50px;
-      transition: background-color 0.5s;
     }
-    h2 { color: #856404; }
-    #orderNumber {
-      font-size: 48px;
-      font-weight: bold;
-      color: #856404;
-      margin: 20px 0;
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 200px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
-    #status {
-      margin-top: 10px;
-      font-size: 20px;
-      color: #856404;
+    button {
+      padding: 10px 20px;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
     }
-    .ready { color: green; font-weight: bold; }
+    button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
 
-<h2>ADI - Current Order</h2>
-<div id="orderNumber">—</div>
-<p id="status">Waiting for updates...</p>
+  <div class="login-box">
+    <h2>ADI Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="msg" style="color:red;"></p>
+  </div>
 
-<audio id="readySound" src="ready.mp3" preload="auto"></audio>
+  <script>
+    function login() {
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
 
-<script type="module">
-  // Firebase imports
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
-
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDOoOCdWjdQ5eEdjqUlXvOMBRr6tNAujzI",
-    authDomain: "first-proj-26e93.firebaseapp.com",
-    databaseURL: "https://first-proj-26e93-default-rtdb.firebaseio.com",
-    projectId: "first-proj-26e93",
-    storageBucket: "first-proj-26e93.firebasestorage.app",
-    messagingSenderId: "939884755349",
-    appId: "1:939884755349:web:81f4666a00d0f5952a9e9c",
-    measurementId: "G-D20036Q3KQ"
-  };
-
-  // Init Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  const numberEl = document.getElementById("orderNumber");
-  const statusEl = document.getElementById("status");
-  const sound = document.getElementById("readySound");
-
-  // listen for "currentOrder" value (هذا لازم الأدمن يكتبه برتبة منفصلة بالـ DB)
-  const currentRef = ref(db, "currentOrder");
-
-  onValue(currentRef, (snapshot) => {
-    if (snapshot.exists()) {
-      const orderId = snapshot.val();
-      numberEl.textContent = orderId;
-      statusEl.textContent = "Now serving order #" + orderId;
-
-      // play sound on change
-      sound.play().catch(e => console.log(e));
-
-      // flash background green
-      document.body.style.backgroundColor = "#d4edda";
-      setTimeout(() => {
-        document.body.style.backgroundColor = "#fff3cd";
-      }, 1500);
-    } else {
-      numberEl.textContent = "—";
-      statusEl.textContent = "No current order.";
+      if (user === "admin" && pass === "1234") {
+        window.location.href = "admin.html"; // admin panel
+      } else if (user === "abed" && pass === "12345") {
+        window.location.href = "wait.html"; // customer page
+      } else {
+        document.getElementById("msg").innerText = "❌ Wrong username or password!";
+      }
     }
-  });
-</script>
-
+  </script>
 </body>
 </html>
